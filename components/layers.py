@@ -1,6 +1,7 @@
 import numpy as np
 from typing import List
 import operations as op
+from assert import assert_same_shape
 
 class Layer():
     '''
