@@ -12,24 +12,24 @@ class Operation():
         '''
         '''
         self.input_ = input_
-        self.output = self.f()
+        self.output = self._f()
         return self.output
 
 
     def backward(self, output_grad: np.ndarray) -> np.ndarray:
         assert_same_shape(self.output, output_grad)
-        self.input_grad = self.get_input_grad(output_grad) 
+        self.input_grad = self._get_input_grad(output_grad) 
         assert_same_shape(self.input_, self.input_grad)
         return self.input_grad
     
     
-    def f(self) -> np.ndarray:
+    def _f(self) -> np.ndarray:
         '''
         Interface for computing forward func
         '''
         raise NotImplementedError()
 
-    def get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
+    def _get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
         '''
         Interface for computing partial derivative w.r.t. input
         '''
@@ -47,15 +47,15 @@ class ParamOperation(Operation):
     def backward(self, output_grad: np.ndarray) -> np.ndarray:
         assert_same_shape(self.output, output_grad)
 
-        self.input_grad = self.get_input_grad(output_grad)
-        self.param_grad = self.get_param_grad(output_grad)
+        self.input_grad = self._get_input_grad(output_grad)
+        self.param_grad = self._get_param_grad(output_grad)
 
         assert_same_shape(self.input_, self.input_grad)
         assert_same_shape(self.param, self.param_grad)
 
         return self.input_grad
 
-    def get_param_grad(self, output_grad: np.ndarray) -> np.ndarray:
+    def _get_param_grad(self, output_grad: np.ndarray) -> np.ndarray:
         '''
         Interface for computing partial derivatives w.r.t. params
         '''
@@ -69,14 +69,14 @@ class WeightTransform(ParamOperation):
     def __init__(self, W: np.ndarray):
         super().__init__(W)
 
-    def f(self) -> np.ndarray:
+    def _f(self) -> np.ndarray:
         return self.input_.dot(self.param)
 
-    def get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
+    def _get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
         # dLdOut . dOutdIn
         output_grad.dot(self.param.T)
 
-    def get_param_grad(self, output_grad: np.ndarray) -> np.ndarray:
+    def _get_param_grad(self, output_grad: np.ndarray) -> np.ndarray:
         # dOutdP . dLdOut
         return (self.input_.T).dot(output_grad)
 
@@ -90,13 +90,13 @@ class BiasAdd(ParamOperation):
 
         super().__init__(B)
 
-    def f(self) -> np.ndarray:
+    def _f(self) -> np.ndarray:
         return self.input_ + self.param
 
-    def get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
+    def _get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
         return np.ones_like(self.input_) * output_grad
 
-    def get_param_grad(self, output_grad: np.ndarray) -> np.ndarray:
+    def _get_param_grad(self, output_grad: np.ndarray) -> np.ndarray:
         param_grad = np.ones_like(self.param) * output_grad 
         return param_grad.sum(axis=0).reshape(1, param_grad.shape[1])
 
@@ -104,11 +104,11 @@ class Sigmoid(Operation):
     def __init__(self):
         super().__init__() #Pass
 
-    def f(self) -> np.ndarray:
+    def _f(self) -> np.ndarray:
         return 1.0/(1.0+np.exp(-1.0*self.input_))
 
-    def get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
-        dOutdSigmoid = self.f()*(1-self.f())
+    def _get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
+        dOutdSigmoid = self._f()*(1-self._f())
         return dOutdSigmoid * output_grad
 
 class Linear(Operation):
@@ -118,8 +118,8 @@ class Linear(Operation):
     def __init__(self):
         super().__init__() #Pass
 
-    def f(self) -> np.ndarray:
+    def _f(self) -> np.ndarray:
         return self.input_
 
-    def get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
+    def _get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
         return output_grad
