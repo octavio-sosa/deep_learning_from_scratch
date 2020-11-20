@@ -23,4 +23,15 @@ class NeuralNetwork():
         for layer in reversed(self.layers):
             grad = layer.backward(grad)
 
+    def train_batch(self, x_batch: np.ndarray, y_batch: np.ndarray) -> float:
+        '''
+        Forward and backward propagation
+        '''
 
+        preds = self.forward(x_batch)
+        loss = self.loss.forward(preds, y_batch)
+        dLdP = self.loss.backward()
+        self.backward(dLdP)
+
+        return loss
+        
