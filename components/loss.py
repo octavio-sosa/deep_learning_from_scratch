@@ -22,4 +22,14 @@ class Loss():
         assert_same_shape(self.prediction, self.input_grad)
         return self.input_grad
 
-    def 
+    def _f(self) -> float:
+        '''
+        Interface for loss function
+        '''
+        raise NotImplementedError()
+
+    def _get_input_grad(self) -> np.ndarray:
+        '''
+        Interface for computing partial derivative of loss function w.r.t. predictions
+        '''
+        raise NotImplementedError()
