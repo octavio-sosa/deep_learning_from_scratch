@@ -100,4 +100,15 @@ class BiasAdd(ParamOperation):
         param_grad = np.ones_like(self.param) * output_grad 
         return param_grad.sum(axis=0).reshape(1, param_grad.shape[1])
 
+class Sigmoid(Operation):
+    def __init__(self):
+        super().__init__() #Pass
+
+    def f(self) -> np.ndarray:
+        return 1.0/(1.0+np.exp(-1.0*self.input_))
+
+    def get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
+        dOutdSigmoid = self.f()*(1-self.f())
+        return dOutdSigmoid * output_grad
+
 
