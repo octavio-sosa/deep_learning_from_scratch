@@ -75,3 +75,19 @@ class Dense(Layer):
     def __init__(self, n_neurons: int, activation: op.Operation = op.Sigmoid()):
         super().__init__(n_neurons)
         self.activation = activation
+
+    def _setup_layer(self, input_: np.ndarray):
+        if self.seed:
+            np.random.seed(self.seed)
+
+        self.params = []
+
+        # weights
+        self.params.append(np.random.randn(input_.shape[1], self.n_neurons))
+
+        # bias
+        self.params.append(np.random.randn(1, self.n_neurons))
+
+        self.operations = [op.WeightTransform(self.params[0]),
+                           op.BiasAdd(self.params[1]),
+                           self.activation]
