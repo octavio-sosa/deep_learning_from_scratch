@@ -18,4 +18,9 @@ class NeuralNetwork():
 
         return x
 
-    def backward(self,
+    def backward(self, loss_grad: np.ndarray):
+        grad = loss_grad
+        for layer in reversed(self.layers):
+            grad = layer.backward(grad)
+
+
