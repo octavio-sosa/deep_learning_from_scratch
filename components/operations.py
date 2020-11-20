@@ -111,4 +111,17 @@ class Sigmoid(Operation):
         dOutdSigmoid = self.f()*(1-self.f())
         return dOutdSigmoid * output_grad
 
+class Linear(Operation):
+    '''
+    Identity activation
+    '''
+    def __init__(self):
+        super().__init__() #Pass
+
+    def f(self) -> np.ndarray:
+        return self.input_
+
+    def get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
+        return output_grad
+
 
