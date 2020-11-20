@@ -34,4 +34,17 @@ class NeuralNetwork():
         self.backward(dLdP)
 
         return loss
-        
+
+    def yield_params(self):
+        '''
+        Yields params from each Layer cache
+        '''
+        for layer in self.layers:
+            yield from layer.params
+
+    def yield_param_grads(self):
+        '''
+        Yields param gradients from each Layer cache
+        '''
+        for layer in self.layers:
+            yield from layer.param_grads
