@@ -39,7 +39,8 @@ class MeanSquaredError(Loss):
         super().__init__() #pass
 
     def _f(self) -> float:
-        loss = np.sum(np.power(self.prediction - self.target, 2)) / self.prediction.shape[0]
+        loss = np.sum(np.power(self.prediction - self.target, 2))
+                / self.prediction.shape[0]
         return loss
 
     def _get_input_grad(self) -> np.ndarray:
