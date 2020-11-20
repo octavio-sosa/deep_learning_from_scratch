@@ -33,3 +33,14 @@ class Loss():
         Interface for computing partial derivative of loss function w.r.t. predictions
         '''
         raise NotImplementedError()
+
+class MeanSquaredError(Loss):
+    def __init__(self):
+        super().__init__() #pass
+
+    def _f(self) -> float:
+        loss = np.sum(np.power(self.prediction - self.target, 2)) / self.prediction.shape[0]
+        return loss
+
+    def _get_input_grad(self) -> np.ndarray:
+        return 2.0*(self.prediction - self.target) / self.prediction.shape[0]
