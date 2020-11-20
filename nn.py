@@ -10,3 +10,12 @@ class NeuralNetwork():
         if seed:
             for layer in self.layers:
                 setattr(layer, 'seed', self.seed)
+
+    def forward(self, x_batch: np.ndarray) -> np.ndarray:
+        x = x_batch
+        for layer in self.layers:
+            x = layer.forward(x)
+
+        return x
+
+    def backward(self,
