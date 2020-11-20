@@ -1,5 +1,6 @@
 import numpy as np
 from typing import List
+import operations as op
 
 class Layer():
     '''
@@ -35,4 +36,16 @@ class Layer():
 
     return self.output
 
-    def backward(self, 
+    def backward(self, output_grad: np.ndarray) -> np.ndarray:
+    '''
+    Applies chain rule from output-layer towards input-layer
+    '''
+    op.assert_same_shape(self.output, output_grad)
+    
+    for operation in reversed(self.operations):
+        output_grad = operation.backward(output_grad)
+
+    input_grad = output_grad
+    self._cache_param_grads()
+
+    return input_grad
