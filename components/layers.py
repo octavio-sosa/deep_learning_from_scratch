@@ -7,11 +7,11 @@ class Layer():
     Base layer
     '''
     def __init__(self, n_neurons: int):
-    self.n_neurons = n_neurons
-    self.not_setup = True
-    self.params: List[np.ndarray] = []
-    self.param_grads: List[np.ndarray] = []
-    self.operations: List[Operation] = []
+        self.n_neurons = n_neurons
+        self.not_setup = True
+        self.params: List[np.ndarray] = []
+        self.param_grads: List[np.ndarray] = []
+        self.operations: List[Operation] = []
 
     def _setup_layer(self, input_: np.ndarray)
         '''
@@ -20,32 +20,50 @@ class Layer():
         raise NotImplementedError()
 
     def forward(self, input_: np.ndarray) -> np.ndarray:
-    '''
-    feed forward through all operations of layer
-    '''
-    if self.not_setup:
-        self._setup_layer(input_)
-        self.not_setup = False
+        '''
+        feed forward through all operations of layer
+        '''
+        if self.not_setup:
+            self._setup_layer(input_)
+            self.not_setup = False
 
-    self.input_ = input_
+        self.input_ = input_
 
-    for operation in self.operations:
-        input_ = operation.forward(input_)
+        for operation in self.operations:
+            input_ = operation.forward(input_)
 
-    self.output = input_
+        self.output = input_
 
-    return self.output
+        return self.output
 
     def backward(self, output_grad: np.ndarray) -> np.ndarray:
-    '''
-    Applies chain rule from output-layer towards input-layer
-    '''
-    op.assert_same_shape(self.output, output_grad)
-    
-    for operation in reversed(self.operations):
-        output_grad = operation.backward(output_grad)
+        '''
+        Applies chain rule from output-layer towards input-layer
+        '''
+        op.assert_same_shape(self.output, output_grad)
+        
+        for operation in reversed(self.operations):
+            output_grad = operation.backward(output_grad)
 
-    input_grad = output_grad
-    self._cache_param_grads()
+        input_grad = output_grad
+        self._cache_param_grads()
 
-    return input_grad
+        return input_grad
+
+    def _cache_param_grads(self):
+        '''
+        Cache the parameter gradients in data member
+        '''
+        self.param_grads = []
+        for operation in self.operations:
+            if issubclass(operation.__class__, ParamOperation):
+                self.param_grads.append(operation.param_grad)
+
+    def _cache_params(self):
+        '''
+        Cache the updated parameters
+        '''
+        self.params = []
+        for operation in self.operations:
+            if issubclass(operation.__class__, ParamOperation):
+                self.params.append(operation.param)
