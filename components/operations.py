@@ -69,4 +69,14 @@ class WeightTransform(ParamOperation):
     def __init__(self, W: np.ndarray):
         super().__init__(W)
 
+    def f(self) -> np.ndarray:
+        return self.input_.dot(self.param)
+
+    def get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
+        # dLdOut . dOutdIn
+        output_grad.dot(self.param.T)
+
+    def get_param_grad(self, output_grad: np.ndarray) -> np.ndarray:
+        # dOutdP . dLdOut
+        return (self.input_.T).dot(output_grad)
 
