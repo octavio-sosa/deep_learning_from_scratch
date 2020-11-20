@@ -11,7 +11,7 @@ class Layer():
         self.not_setup = True
         self.params: List[np.ndarray] = []
         self.param_grads: List[np.ndarray] = []
-        self.operations: List[Operation] = []
+        self.operations: List[op.Operation] = []
 
     def _setup_layer(self, input_: np.ndarray)
         '''
@@ -56,7 +56,7 @@ class Layer():
         '''
         self.param_grads = []
         for operation in self.operations:
-            if issubclass(operation.__class__, ParamOperation):
+            if issubclass(operation.__class__, op.ParamOperation):
                 self.param_grads.append(operation.param_grad)
 
     def _cache_params(self):
@@ -65,5 +65,13 @@ class Layer():
         '''
         self.params = []
         for operation in self.operations:
-            if issubclass(operation.__class__, ParamOperation):
+            if issubclass(operation.__class__, op.ParamOperation):
                 self.params.append(operation.param)
+
+class Dense(Layer):
+    '''
+    Fully connected layer
+    '''
+    def __init__(self, n_neurons: int, activation: op.Operation = op.Sigmoid()):
+        super().__init__(n_neurons)
+        self.activation = activation
