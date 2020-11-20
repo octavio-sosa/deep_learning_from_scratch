@@ -80,3 +80,24 @@ class WeightTransform(ParamOperation):
         # dOutdP . dLdOut
         return (self.input_.T).dot(output_grad)
 
+class BiasAdd(ParamOperation):
+
+    def __init__(self, B: np.ndarray):
+        assert B.shape[0] == 1, \
+        '''Bias array should have row size of 1;
+        instead, row size is {0}.
+        '''.format(B.shape[0])
+
+        super().__init__(B)
+
+    def f(self) -> np.ndarray:
+        return self.input_ + self.param
+
+    def get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
+        return np.ones_like(self.input_) * output_grad
+
+    def get_param_grad(self, output_grad: np.ndarray) -> np.ndarray:
+        param_grad = np.ones_like(self.param) * output_grad 
+        return param_grad.sum(axis=0).reshape(1, param_grad.shape[1])
+
+
