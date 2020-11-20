@@ -123,5 +123,3 @@ class Linear(Operation):
 
     def get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
         return output_grad
-
-
