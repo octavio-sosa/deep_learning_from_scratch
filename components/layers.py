@@ -9,7 +9,7 @@ class Layer():
     '''
     def __init__(self, n_neurons: int):
         self.n_neurons = n_neurons
-        self.not_setup = True
+        self.setup = True
         self.params: List[np.ndarray] = []
         self.param_grads: List[np.ndarray] = []
         self.operations: List[op.Operation] = []
@@ -24,9 +24,9 @@ class Layer():
         '''
         feed forward through all operations of layer
         '''
-        if self.not_setup:
+        if self.setup:
             self._setup_layer(input_)
-            self.not_setup = False
+            self.setup = False
 
         self.input_ = input_
 
