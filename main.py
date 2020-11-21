@@ -14,12 +14,13 @@ def main():
     deep_net = NeuralNetwork(layers=[Dense(n_neurons=13, activation=Sigmoid()),
                                      Dense(n_neurons=13, activation=Sigmoid()),
                                      Dense(n_neurons=1, activation=Linear())],
-                             loss=MeanSquaredError(), seed=80718)
+                             loss=MeanSquaredError(), seed=20190501)
 
     trainer = Trainer(deep_net, SGD(learning_rate=0.01))
     trainer.train(X_train, Y_train, X_test, Y_test,
-                  epochs=1_000, eval_period=100, batch_size=23,
-                  seed=80718)
+                  epochs=50, eval_period=10, batch_size=23,
+                  seed=20190501)
 
 if __name__ == '__main__':
+    print()
     main()

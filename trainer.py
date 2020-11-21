@@ -62,13 +62,12 @@ class Trainer():
                     print(f'Validation loss after {epoch+1} epochs is {loss:.3f}')
                     self.least_loss = loss
                 else:
-                    print(f'Loss increased after {epoch+1} epochs.')
-                    print(f'Least loss was {self.least_loss:.3f},\n\
-                            given by the model from epoch {epoch+1-eval_period}')
+                    print(f'\nLoss increased after {epoch+1} epochs.')
+                    print(f'The model from epoch {epoch+1-eval_period} gave the least loss.')
                     # update optimizer with latest NN model
                     self.net = latest_model
                     setattr(self.optim, 'net', self.net)
                     break # halt training
 
                 
-
+        print() 

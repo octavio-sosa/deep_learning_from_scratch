@@ -16,7 +16,9 @@ def data():
     for key in data.keys():
         print(f'{key}: {data[key].shape}')
 
-    '''
+def train():
+    X_train, X_test, Y_train, Y_test = dp.get_data()
+
     deep_net = NeuralNetwork(layers=[Dense(n_neurons=13, activation=Sigmoid()),
                                      Dense(n_neurons=13, activation=Sigmoid()),
                                      Dense(n_neurons=1, activation=Linear())],
@@ -26,9 +28,10 @@ def data():
     trainer.train(X_train, Y_train, X_test, Y_test,
                   epochs=1_000, eval_period=100, batch_size=23,
                   seed=80718)
-    '''
 
 def test():
-    data()
+    #data()
+    print()
+    train()
 
 test()

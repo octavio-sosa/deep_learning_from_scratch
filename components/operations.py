@@ -75,7 +75,7 @@ class WeightTransform(ParamOperation):
 
     def _get_input_grad(self, output_grad: np.ndarray) -> np.ndarray:
         # dLdOut . dOutdIn
-        output_grad.dot(self.param.T)
+        return output_grad.dot(self.param.T)
 
     def _get_param_grad(self, output_grad: np.ndarray) -> np.ndarray:
         # dOutdP . dLdOut
