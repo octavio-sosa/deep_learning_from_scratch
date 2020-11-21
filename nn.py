@@ -1,4 +1,5 @@
 import numpy as np
+from typing import List
 from components.loss import Loss
 from components.layers import Layer
 

@@ -1,7 +1,9 @@
 import numpy as np
 from typing import List
-import operations as op
-from assert import assert_same_shape
+from components.operations import Operation, ParamOperation,\
+                                  WeightTransform,\
+                                  BiasAdd, Sigmoid
+from components.assertions import assert_same_shape
 
 class Layer():
     '''
@@ -12,9 +14,9 @@ class Layer():
         self.setup = True
         self.params: List[np.ndarray] = []
         self.param_grads: List[np.ndarray] = []
-        self.operations: List[op.Operation] = []
+        self.operations: List[Operation] = []
 
-    def _setup_layer(self, input_: np.ndarray)
+    def _setup_layer(self, input_: np.ndarray):
         '''
         Interface
         '''
@@ -41,7 +43,7 @@ class Layer():
         '''
         Applies chain rule from output-layer towards input-layer
         '''
-        op.assert_same_shape(self.output, output_grad)
+        assert_same_shape(self.output, output_grad)
         
         for operation in reversed(self.operations):
             output_grad = operation.backward(output_grad)
@@ -57,7 +59,7 @@ class Layer():
         '''
         self.param_grads = []
         for operation in self.operations:
-            if issubclass(operation.__class__, op.ParamOperation):
+            if issubclass(operation.__class__, ParamOperation):
                 self.param_grads.append(operation.param_grad)
 
     def _cache_params(self):
@@ -66,14 +68,14 @@ class Layer():
         '''
         self.params = []
         for operation in self.operations:
-            if issubclass(operation.__class__, op.ParamOperation):
+            if issubclass(operation.__class__, ParamOperation):
                 self.params.append(operation.param)
 
 class Dense(Layer):
     '''
     Fully connected layer
     '''
-    def __init__(self, n_neurons: int, activation: op.Operation = op.Sigmoid()):
+    def __init__(self, n_neurons: int, activation: Operation = Sigmoid()):
         super().__init__(n_neurons)
         self.activation = activation
 
@@ -89,6 +91,6 @@ class Dense(Layer):
         # bias
         self.params.append(np.random.randn(1, self.n_neurons))
 
-        self.operations = [op.WeightTransform(self.params[0]),
-                           op.BiasAdd(self.params[1]),
+        self.operations = [WeightTransform(self.params[0]),
+                           BiasAdd(self.params[1]),
                            self.activation]

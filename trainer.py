@@ -63,7 +63,7 @@ class Trainer():
                     self.least_loss = loss
                 else:
                     print(f'Loss increased after {epoch+1} epochs.')
-                    print(f'Least loss was {self.least_loss:.3f},\n
+                    print(f'Least loss was {self.least_loss:.3f},\n\
                             given by the model from epoch {epoch+1-eval_period}')
                     # update optimizer with latest NN model
                     self.net = latest_model

@@ -1,5 +1,5 @@
 import numpy as np
-from assert import assert_same_shape
+from components.assertions import assert_same_shape
 
 class Loss():
     def __init__(self):
@@ -39,7 +39,7 @@ class MeanSquaredError(Loss):
         super().__init__() #pass
 
     def _f(self) -> float:
-        loss = np.sum(np.power(self.prediction - self.target, 2))
+        loss = np.sum(np.power(self.prediction - self.target, 2))\
                 / self.prediction.shape[0]
         return loss
 
