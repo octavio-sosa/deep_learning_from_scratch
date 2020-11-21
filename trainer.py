@@ -18,7 +18,7 @@ class Trainer():
         '''
         observation and target data must have the same number of rows, instead
         observation data has {0} and target data has {1}
-        '''.format(X_train.shape[0], y_train.shape[0]) 
+        '''.format(X_train.shape[0], Y_train.shape[0]) 
 
         n_observations = X_train.shape[0]
 
