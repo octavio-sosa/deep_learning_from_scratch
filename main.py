@@ -18,7 +18,7 @@ def main():
 
     trainer = Trainer(deep_net, SGD(learning_rate=0.01))
     trainer.train(X_train, Y_train, X_test, Y_test,
-                  epochs=50, eval_period=10, batch_size=23,
+                  epochs=350, eval_period=50, batch_size=23,
                   seed=20190501)
 
 if __name__ == '__main__':
